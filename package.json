@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "appdynamics": "^24.3.0",
     "argon2": "^0.40.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.0.0",
@@ -23,6 +24,8 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.9.4",
     "nodemon": "^2.0.4",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
     "redis": "^3.0.2",
     "sequelize": "^6.37.2"
   },

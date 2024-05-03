@@ -44,14 +44,14 @@ const User = db.define('Users',{
     type: DataTypes.STRING,
     allowNull: false,
     validate:{
-        notEmpty: true,
+      notEmpty: true,
     }
   },
   role:{
     type: DataTypes.STRING,
     allowNull: false,
     validate:{
-        notEmpty: true
+      notEmpty: true
     }
   }
 },{

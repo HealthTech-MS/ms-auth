@@ -21,8 +21,8 @@ export const register = async (req, res, next) => {
     const hashedPassword = await argon2.hash(result.password, {
       memoryCost: 2**16,
       hashLength: 50,
-      timeCost:20,
-      parallelism:3
+      timeCost: 20,
+      parallelism: 3
     })
 
     const user = await User.create({
@@ -52,6 +52,7 @@ export const login =  async (req, res, next) => {
         phoneNumber: result.phoneNumber
       }
     })
+    
     if(!user){
       throw createError.NotFound('User not registered')
     }
@@ -114,7 +115,7 @@ export const logout = async (req, res, next) => {
         throw createError.InternalServerError()
       }
       console.log(val)
-      res.sendStatus(204)
+      res.send({"success": true})
     })
   } catch (error) {
     next(error)

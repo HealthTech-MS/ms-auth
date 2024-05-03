@@ -4,8 +4,7 @@ import dontenv from 'dotenv'
 dontenv.config()
 
 const client = redis.createClient({
-  port: process.env.REDIS_PORT,
-  host: process.env.REDIS_DOMAIN,
+  url: `${process.env.REDIS_DOMAIN}:process.env.REDIS_PORT`,
 })
 
 client.on('connect', () => {
