@@ -62,8 +62,8 @@ export const login =  async (req, res, next) => {
       throw createError.Unauthorized('Username/password not valid')
     }
 
-    const accessToken = await signAccessToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
-    const refreshToken = await signRefreshToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
+    const accessToken = await signAccessToken(user.uuid, { "uuid": user.uuid })
+    const refreshToken = await signRefreshToken(user.uuid, { "uuid": user.uuid })
 
     res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid })
   } catch (error) {
@@ -81,9 +81,8 @@ export const refreshToken = async (req, res, next) => {
     }
 
     const userId = await verifyRefreshToken(refreshToken)
-    const accessToken = await signAccessToken(userId)
-    const refToken = await signRefreshToken(userId)
-    res.send({ accessToken: accessToken, refreshToken: refToken })
+    const accessToken = await signAccessToken(userId, { "uuid": userId })
+    res.send({ success: "true", accessToken: accessToken })
   } catch (error) {
     next(error)
   }
@@ -114,7 +113,6 @@ export const logout = async (req, res, next) => {
         console.log(err.message)
         throw createError.InternalServerError()
       }
-      console.log(val)
       res.send({"success": true})
     })
   } catch (error) {
