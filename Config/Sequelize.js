@@ -10,7 +10,8 @@ const db = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, pro
     dialectModule: pg,
     dialectOptions: {
         ssl: true
-    }
+    },
+    timezone: "-06:00"
 });
 
 export default db;
