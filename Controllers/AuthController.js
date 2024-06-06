@@ -36,7 +36,7 @@ export const register = async (req, res, next) => {
     const accessToken = await signAccessToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
     const refreshToken = await signRefreshToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
 
-    res.send({ "success": true, accessToken, refreshToken })
+    res.send({ "success": true, accessToken, refreshToken, "uuid": user.uuid })
   } catch (error) {
     if (error.isJoi === true) error.status = 406
     next(error)
