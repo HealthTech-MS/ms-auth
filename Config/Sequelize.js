@@ -1,11 +1,17 @@
+import pg from "pg"
+import dontenv from 'dotenv'
 import { Sequelize } from "sequelize";
 
-const db = new Sequelize("misalud","misalud_user","oIO9Krncmn8pz2UQBW12WPFfL0tHnD8Q", {
+dontenv.config()
+
+const db = new Sequelize(process.env.POSTGRES_DB, process.env.POSTGRES_USER, process.env.POSTGRES_PASSWORD, {
     dialect: "postgres",
-    host: "dpg-coq2nkcf7o1s73e9tp5g-a.oregon-postgres.render.com",
+    host: process.env.POSTGRES_HOST,
+    dialectModule: pg,
     dialectOptions: {
         ssl: true
-    }
+    },
+    timezone: "-06:00"
 });
 
 export default db;

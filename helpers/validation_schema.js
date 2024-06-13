@@ -7,6 +7,11 @@ export const registerSchema = Joi.object({
   password: Joi.string().min(2).required(),
 })
 
+export const changePasswordSchema = Joi.object({
+  uuid: Joi.string().min(36).required(),
+  newPassword: Joi.string().min(2).required(),
+})
+
 export const loginSchema = Joi.object({
   phoneNumber: Joi.string().min(10).max(10).required(),
   password: Joi.string().min(2).required(),
