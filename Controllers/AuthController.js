@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import createError from 'http-errors'
 import User from '../Models/User.js'
 import client from '../Config/Redis.js'
-import { registerSchema, loginSchema } from '../helpers/validation_schema.js'
+import { registerSchema, loginSchema, changePasswordSchema } from '../helpers/validation_schema.js'
 import { signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToken } from '../helpers/jwt_helper.js'
 
 export const register = async (req, res, next) => {
@@ -36,7 +36,7 @@ export const register = async (req, res, next) => {
     const accessToken = await signAccessToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
     const refreshToken = await signRefreshToken(user.uuid, {"uuid": user.uuid, "firstName": user.firstName, "phoneNumber": user.phoneNumber})
 
-    res.send({ "success": true, accessToken, refreshToken })
+    res.send({ "success": true, accessToken, refreshToken, "uuid": user.uuid })
   } catch (error) {
     if (error.isJoi === true) error.status = 406
     next(error)
@@ -65,7 +65,7 @@ export const login =  async (req, res, next) => {
     const accessToken = await signAccessToken(user.uuid, { "uuid": user.uuid })
     const refreshToken = await signRefreshToken(user.uuid, { "uuid": user.uuid })
 
-    res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid })
+    res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid, role: user.role })
   } catch (error) {
     if (error.isJoi === true)
       return next(createError.BadRequest('Invalid Username/Password'))
@@ -116,6 +116,37 @@ export const logout = async (req, res, next) => {
       res.send({"success": true})
     })
   } catch (error) {
+    next(error)
+  }
+}
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const result = await changePasswordSchema.validateAsync(req.body)
+    const user = await User.findOne({ 
+      where:{
+        uuid: result.uuid
+      }
+    })
+    
+    if(!user){
+      throw createError.NotFound('User not registered')
+    }
+    
+    const hashedPassword = await argon2.hash(result.newPassword, {
+      memoryCost: 2**16,
+      hashLength: 50,
+      timeCost: 20,
+      parallelism: 3
+    })
+
+    user.password = hashedPassword
+
+    user.save()
+
+    res.send({ "success": true })
+  } catch (error) {
+    if (error.isJoi === true) error.status = 406
     next(error)
   }
 }
