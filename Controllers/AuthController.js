@@ -7,7 +7,11 @@ import { signAccessToken, signRefreshToken, verifyRefreshToken, verifyAccessToke
 
 export const register = async (req, res, next) => {
   try {
+    console.log('Login request body:', req.body);
+
     const result = await registerSchema.validateAsync(req.body)
+    console.log('Validation result:', result);
+    
     const doesExist = await User.findOne({
       where:{
         phoneNumber: result.phoneNumber
@@ -46,6 +50,7 @@ export const register = async (req, res, next) => {
 export const login =  async (req, res, next) => {
   try {
     const result = await loginSchema.validateAsync(req.body)
+    console.log('Validation result:', result);
 
     const user = await User.findOne({ 
       where:{
@@ -64,6 +69,9 @@ export const login =  async (req, res, next) => {
 
     const accessToken = await signAccessToken(user.uuid, { "uuid": user.uuid })
     const refreshToken = await signRefreshToken(user.uuid, { "uuid": user.uuid })
+
+    console.log('Access token:', accessToken);
+    console.log('Refresh token:', refreshToken);
 
     res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid })
   } catch (error) {
