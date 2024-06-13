@@ -4,6 +4,7 @@ import express from "express"
 import createError from "http-errors"
 import db from "./Config/Sequelize.js"
 import AuthRoute from "./Routes/AuthRoute.js"
+import cors from "cors"
 
 dontenv.config()
 
@@ -12,6 +13,11 @@ const app = express()
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+app.use(cors({
+  origin: ["http://localhost:3000", "https://misalud.vercel.app"],
+  default: "https://misalud.vercel.app/"
+}))
 
 // ;(async()=>{
 //   await db.sync({force: true});
