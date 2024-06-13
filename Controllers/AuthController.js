@@ -65,7 +65,7 @@ export const login =  async (req, res, next) => {
     const accessToken = await signAccessToken(user.uuid, { "uuid": user.uuid })
     const refreshToken = await signRefreshToken(user.uuid, { "uuid": user.uuid })
 
-    res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid })
+    res.send({ "success": true, accessToken, refreshToken, uuid: user.uuid, role: user.role })
   } catch (error) {
     if (error.isJoi === true)
       return next(createError.BadRequest('Invalid Username/Password'))
